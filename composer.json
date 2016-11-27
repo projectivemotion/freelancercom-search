@@ -1,0 +1,14 @@
+{
+    "name": "projectivemotion/freelancercom-search",
+    "description": "Search freelancer.com projects",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Amado Martinez",
+            "email": "amado@projectivemotion.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
