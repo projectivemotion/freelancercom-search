@@ -38,19 +38,28 @@ class Search
         return $parsed;
     }
 
-    public static function getCategoryId($categoryName)
+    public static function getCategoryId($categoryName = NULL)
     {
         static $ids = NULL;
         if(!$ids){
             $file = file_get_contents(__DIR__ . '/../li-skills.html');
-            $matches = preg_match_all('/value="([^"])*?" data-job_name="([^"]*?)"/', $file, $groups, PREG_PATTERN_ORDER);
+            $matches = preg_match_all('/value="([^"]*?)" data-job_name="([^"]*?)"/', $file, $groups, PREG_PATTERN_ORDER);
             if(!$matches) throw new \Exception('Unable to get categories.');
 
 //            array_shift($groups);
             $ids = array_combine($groups[2], $groups[1]);
 //            print_r($ids);            print_r($groups);
         }
-        return $ids[$categoryName];
+        return $categoryName ? $ids[$categoryName] : $ids;
+    }
+
+    public static function getCategoryName($categoryId)
+    {
+        static $verse = NULL;
+        if(!$verse) $verse = array_flip(self::getCategoryId());
+
+//        var_dump($verse);exit;
+        return $verse[(int)$categoryId];
     }
 
     public function setCategories($category_names = [])
@@ -73,11 +82,12 @@ class Search
 
     public static function create_obj($row)
     {
-        $obj = (object)array(
+        $obj = array(
             'PROJECTID' => $row[0],
             'title' => $row[1],
-            'description' => $row[2],
+            'description' => html_entity_decode($row[2]),
             'numbids' => $row[3],
+            'tags' => array_map('self::getCategoryName', explode(',', $row[4])),
             'tags_ids' => $row[4],
             'DATE_CREATED' => date('Y-m-d', strtotime($row[6])),
             'DATE_ENDS' => date('Y-m-d', strtotime($row[7])),
@@ -86,6 +96,7 @@ class Search
             'URL' => $row[21],
             'min_budget' => $row[32]->minbudget_usd,
             'max_budget' => $row[32]->maxbudget_usd);
+
         return $obj;
     }
 }
