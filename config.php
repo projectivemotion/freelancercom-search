@@ -73,7 +73,7 @@ return array (
             'hourlyrate_min' => 'false',
             'hourlyrate_max' => 'false',
                 /** @see li-skills.html **/
-            'skills_chosen' => '3,31',
+            'skills_chosen' => '',
             'verified_employer' => 'false',
             'bidding_ends' => 'N/A',
             'bookmarked' => 'false',
@@ -90,7 +90,7 @@ return array (
             'ul' => 'en',
             'uc' => '1',
         /** @see li-skills.html **/
-            'xpbonus_catIds' => '15',
+            'xpbonus_catIds' => '',
             'jobIdEnable' => 'on',
             'status' => 'open',
             '_' => time(),

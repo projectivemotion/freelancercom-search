@@ -24,7 +24,10 @@ class Search
         $result = json_decode($content);
         if(!$result)    throw new \Exception(json_last_error_msg());
 
-        if(!$result->aaData) throw new \Exception('Invalid response.');
+        if(!$result->aaData){
+            var_export($result);
+            throw new \Exception('Invalid response.');
+        }
 
         $parsed =   [];
         array_walk($result->aaData, function ($item, $key) use (&$parsed){
@@ -34,6 +37,28 @@ class Search
 
         return $parsed;
     }
+
+    public static function getCategoryId($categoryName)
+    {
+        static $ids = NULL;
+        if(!$ids){
+            $file = file_get_contents(__DIR__ . '/../li-skills.html');
+            $matches = preg_match_all('/value="([^"])*?" data-job_name="([^"]*?)"/', $file, $groups, PREG_PATTERN_ORDER);
+            if(!$matches) throw new \Exception('Unable to get categories.');
+
+//            array_shift($groups);
+            $ids = array_combine($groups[2], $groups[1]);
+//            print_r($ids);            print_r($groups);
+        }
+        return $ids[$categoryName];
+    }
+
+    public function setCategories($category_names = [])
+    {
+        $ids = array_map('self::getCategoryId', $category_names);
+        $this->config['query_arr']['skills_chosen'] =   implode(',', $ids);
+    }
+
 
     public static function create_url($url_array)
     {
