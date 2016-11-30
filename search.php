@@ -8,7 +8,8 @@ namespace projectivemotion\FreelancerComSearch;
 
 require 'src/Search.php';
 
-$parsed = get_results(create_url(include 'config.php'));
+$search = new Search(include 'config.php');
+$objects = $search->getResults();
 
-echo json_encode($parsed, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+echo json_encode($objects, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
